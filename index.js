@@ -33,7 +33,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-// API to load all tasks
+// API to get all tasks
 const tasksCollection = client.db("todoTaskDB").collection("allTasks");
 
 app.get("/allTasks", async (req, res) => {
@@ -48,12 +48,21 @@ app.get("/allTasks", async (req, res) => {
   res.send(result);
 });
 
-// API to create a task
+// API to create a new task
 app.post("/allTasks", async (req, res) => {
   console.log("Request Body:", req.body);
   const item = req.body;
   console.log("From Client:", item);
   const result = await tasksCollection.insertOne(item);
+  res.send(result);
+});
+
+// API to delete a task
+
+app.delete("/allTasks/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await tasksCollection.deleteOne(query);
   res.send(result);
 });
 
