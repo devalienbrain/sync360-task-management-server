@@ -48,6 +48,14 @@ app.get("/allTasks", async (req, res) => {
   res.send(result);
 });
 
+// API to get a task
+app.get("/allTasks/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await tasksCollection.findOne(query);
+  res.send(result);
+});
+
 // API to create a new task
 app.post("/allTasks", async (req, res) => {
   console.log("Request Body:", req.body);
@@ -66,6 +74,22 @@ app.delete("/allTasks/:id", async (req, res) => {
   res.send(result);
 });
 
+// API to edit a task
+app.patch("/allTasks/:id", async (req, res) => {
+  const task = req.body;
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const updatedDoc = {
+    $set: {
+      title: task.title,
+      description: task.description,
+      deadline: task.deadline,
+      priority: task.priority,
+    },
+  };
+  const result = await tasksCollection.updateOne(filter, updatedDoc);
+  res.send(result);
+});
 // connect to server
 app.get("/", (req, res) => {
   res.send("SERVER is running!");
